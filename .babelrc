@@ -1,0 +1,15 @@
+{
+  "presets": [      // 设置转码规则
+    "latest"
+  ],
+  "plugins": [
+    ["transform-runtime", {
+      "polyfill": false,
+      "regenerator": true
+    }],
+    "transform-async-to-generator",
+    "transform-es2015-destructuring",
+    "transform-object-rest-spread",
+    "transform-class-properties"
+  ]
+}
