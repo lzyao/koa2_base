@@ -19,7 +19,6 @@ const getToken = async (user, next) => {
   );
   return {
     token: token,
-    expires: expires,
     user: user.toJSON()
   };
 };
@@ -47,7 +46,7 @@ const decryToken = async (ctx, next) => {
       if (decoded.exp <= Date.now()) {
         // ctx.req.user = '';
         // ctx.res.end('Access token has expired', 400);
-        await next();
+        ctx.body = {success: 'false', message: 'token失效'};
       } else {
         // 没有过期 根据解析出的内容 查询数据库是否存在
         await Customer.findOne({ '_id': decoded.iss })
@@ -61,12 +60,9 @@ const decryToken = async (ctx, next) => {
       }
     } catch (err) {
       ctx.status = 400;
-      ctx.res.end('Access token has expired', 400);
-      await next();
+      ctx.body = {success: 'false', message: 'token解析失败'};
     }
-  } else {
-    await next();
-  }
+  };
 };
 
 module.exports.getToken = getToken;
