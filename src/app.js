@@ -4,6 +4,8 @@ import Router from 'koa-router';
 import logger, { requestIdContext, requestLogger, timeContext } from 'koa-bunyan-logger';
 import { pick, merge, trimEnd } from 'lodash';
 import bytes from 'bytes';
+import cors from 'koa-cors';
+import convert from 'koa-convert';
 import bodyParser from 'koa-bodyparser';
 import config from './modules/util/config';
 import registerCtrl from './common/controllers';
@@ -24,6 +26,13 @@ app.use(logger(bunyan));
 app.use(requestIdContext({
   header: 'Request-Id'
 }));
+app.use(convert(cors({
+  origin: true,
+  credentials: true,
+  headers: ['Content-Type', 'accept', 'X-CLOUD-TOKEN', 'token'],
+  expose: ['Total', 'X-Response-Time', 'Content-Disposition']
+})));
+
 app.use(requestLogger({
   durationField: 'responseTime',
   updateRequestLogFields: (ctx) => {
