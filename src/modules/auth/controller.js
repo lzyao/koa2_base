@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import mongoose from 'mongoose';
 import _ from 'lodash';
 import logs from './../customerLogs/controller';
+import service from './../util/service';
 
 async function logout(ctx) {
   ctx.body = '登出成功';
@@ -25,14 +26,14 @@ async function login(ctx, next) {
   if (!customer) {
     _.merge(customerLogs, {result: '用户名不存在'});
     await logs.addCustomerLoginLogs(customerLogs);
-    ctx.body = {success: false, message: '用户名不存在'};
+    ctx.body = service[1].returnBody(1, 0, {}, '用户名不存在');
   }
   // 判断密码是否正确
   await bcrypt.compare(password, customer.password).then(async (res) => {
     if (!res) {
       _.merge(customerLogs, {result: '密码错误'});
       await logs.addCustomerLoginLogs(customerLogs);
-      ctx.body = {success: false, message: '密码错误'};
+      ctx.body = service[1].returnBody(1, 0, {}, '密码错误');
     } else {
       // 清空密码
       customer.password = undefined;
@@ -40,7 +41,7 @@ async function login(ctx, next) {
       const tokenJson = await jwt.getToken(customer);
       _.merge(customerLogs, {customer: customer._id, result: '登录成功'});
       await logs.addCustomerLoginLogs(customerLogs);
-      ctx.body = {success: true, token: tokenJson, message: '登录成功'};
+      ctx.body = service[1].returnBody(0, 0, tokenJson, 'ok');
     }
   });
 };

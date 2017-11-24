@@ -43,7 +43,7 @@ const decryToken = async (ctx, next) => {
      */
     var token = (body && body.token) || query.token || headers['access-token'];
     if (!query.version || query.version !== 'v1') {
-      ctx.body = returnBody(false, {}, true, '版本信息错误');
+      ctx.body = returnBody(1, 0, {}, '版本信息错误');
       return;
     }
     // 如果token存在
@@ -53,7 +53,7 @@ const decryToken = async (ctx, next) => {
         var decoded = jwt.decode(token, tokenString);
         // 判断token过期时间  如果过期返回状态400
         if (decoded.exp <= Date.now()) {
-          ctx.body = returnBody(false, {}, false, 'token失效');
+          ctx.body = returnBody(1, 1, {}, 'token失效');
         } else {
           // 没有过期 根据解析出的内容 查询数据库是否存在
           await User.findOne({ '_id': decoded.iss })
@@ -64,17 +64,16 @@ const decryToken = async (ctx, next) => {
               ctx.req.user = user;  // 如果数据库存在，将查询到用户信息附加到请求上
               await next();
             } else {
-              ctx.body = returnBody(false, {}, false, 'token解析失败');
+              ctx.body = returnBody(1, 1, {}, 'token解析失败');
             }
           });
         }
       } catch (err) {
-        ctx.status = 400;
         console.log(err);
-        ctx.body = returnBody(false, {}, false, 'token解析失败');
+        ctx.body = returnBody(1, 1, {}, 'token解析失败');
       }
     } else {
-      ctx.body = returnBody(false, {}, false, 'token不存在');
+      ctx.body = returnBody(1, 1, {}, 'token不存在');
     }
   }
 };
