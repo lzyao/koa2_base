@@ -1,5 +1,5 @@
 
-module.exports.mongo = function (Schema) {
+module.exports.mongo = (Schema) => {
   const CustomerLogsSchema = new Schema({
     customer: {
       type: Schema.ObjectId,

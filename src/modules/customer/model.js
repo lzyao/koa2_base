@@ -1,6 +1,6 @@
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
-module.exports.mongo = function (Schema) {
+module.exports.mongo = (Schema) => {
   const CustomerSchema = new Schema({
     username: {
       type: String,
