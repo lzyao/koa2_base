@@ -1,3 +1,6 @@
+/**
+ * 日志记录
+ */
 import bunyan from 'bunyan';
 import config from './config';
 

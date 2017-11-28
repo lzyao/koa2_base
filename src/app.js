@@ -1,4 +1,5 @@
 import Koa from 'koa';
+const app = new Koa();
 import responseTime from 'koa-response-time';
 import Router from 'koa-router';
 import logger, { requestIdContext, requestLogger, timeContext } from 'koa-bunyan-logger';
@@ -7,14 +8,15 @@ import bytes from 'bytes';
 import cors from 'koa-cors';
 import convert from 'koa-convert';
 import bodyParser from 'koa-bodyparser';
+
 import config from './modules/util/config';
 import registerCtrl from './common/controllers';
 import initial from './common/initial';
 import models from './common/models/';
 import services from './common/services';
 import bunyan from './modules/util/log';
-import token from './modules/jwt/controller';  // implement login and logout method
-const app = new Koa();
+
+import token from './modules/controller/jwt';  // implement login and logout method
 
 const prefix = { prefix: '/api' };
 
@@ -63,7 +65,6 @@ app.use(bodyParser({
   formLimit: '100mb'
 }));
 
-app.use(token.decryToken);
 // 加载所有路由
 registerCtrl({
   unauth: unauthRouter,
@@ -71,6 +72,7 @@ registerCtrl({
 });
 
 app.use(unauthRouter.routes());
+app.use(token.decryToken);
 app.use(publicRouter.routes());
 
 // catch all exceptions  捕获所有异常

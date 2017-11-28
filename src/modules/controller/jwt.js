@@ -33,7 +33,7 @@ const decryToken = async (ctx, next) => {
     // 解析url地址
     const { query, body, headers } = ctx.request;
     const tokenString = config.app.token.keys;
-    const User = mongoose.model('User');
+    const Customer = mongoose.model('Customer');
     /**
      * Take the token from:
      *  - the POST value token
@@ -56,12 +56,12 @@ const decryToken = async (ctx, next) => {
           ctx.body = returnBody(1, 1, {}, 'token失效');
         } else {
           // 没有过期 根据解析出的内容 查询数据库是否存在
-          await User.findOne({ '_id': decoded.iss })
-          .then(async (user) => {
-            if (user) {
-              user.phone = undefined;
-              user.password = undefined;
-              ctx.req.user = user;  // 如果数据库存在，将查询到用户信息附加到请求上
+          await Customer.findOne({ '_id': decoded.iss })
+          .then(async (customer) => {
+            if (customer) {
+              customer.phone = undefined;
+              customer.password = undefined;
+              ctx.req.customer = customer;  // 如果数据库存在，将查询到用户信息附加到请求上
               await next();
             } else {
               ctx.body = returnBody(1, 1, {}, 'token解析失败');

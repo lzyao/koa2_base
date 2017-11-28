@@ -13,15 +13,16 @@ pagination.paginate.options = {
 const FileSchema = new mongoose.Schema({}, { strict: false, collection: 'fs.files' });
 
 export default () => {
-  let defines = glob.sync('*/model.js', {
+  let defines = glob.sync('model/*.js', {
     root: 'modules',
-    cwd: path.resolve(__dirname, '../..', 'modules')
+    cwd: path.resolve(__dirname, '../..', 'modules/')
   });
-  defines = _.union(defines, glob.sync('*/models/*.js', {
+  defines = _.union(defines, glob.sync('model/*.js', {
     root: 'modules',
-    cwd: path.resolve(__dirname, '../..', 'modules')
+    cwd: path.resolve(__dirname, '../..', 'modules/')
   }));
-  console.log('===============models', defines);
+  console.log('controller', defines);
+  console.log('-------------------------');
   defines.forEach(function (define) {
     const { mongo } = require('../../modules/' + define);
     if (!mongo) return;
