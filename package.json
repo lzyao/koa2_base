@@ -54,7 +54,7 @@
     "koa-router": "^7.2.1",
     "koa-session": "^5.5.0",
     "moment": "^2.18.1",
-    "mongoose": "^4.11.5",
+    "mongoose": "^5.7.6",
     "mongoose-paginate": "^5.0.3",
     "mongoose-timestamp": "^0.6.0",
     "passport-local": "^1.0.0"
